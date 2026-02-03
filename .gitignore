@@ -1,0 +1,9 @@
+Data/
+mlflow.db
+notebooks/mlruns/
+__pycache__/
+*.pyc
+model.joblib
+projet8
+app
+export_model.py
