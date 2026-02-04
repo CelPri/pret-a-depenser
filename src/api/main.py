@@ -18,19 +18,28 @@ class ClientID(BaseModel):
 
 from pathlib import Path
 
+from pathlib import Path
+import os
+
 def get_features_by_id(sk_id_curr: int) -> pd.DataFrame:
-    # CAS LOCAL : CSV présent dans le projet
-    local_path = Path(__file__).resolve().parents[2] / "Data" / "features_clients.csv"
-    if local_path.exists():
-        df = pd.read_csv(local_path)
+    # CAS TEST : features injectées par pytest
+    if hasattr(app.state, "features") and app.state.features is not None:
+        df = app.state.features
+
     else:
-        # CAS HF : téléchargement depuis le Hub
-        path = hf_hub_download(
-            repo_id="PCelia/credit-scoring-model",
-            filename="features_clients.csv",
-            token=os.environ.get("HF_TOKEN")
-        )
-        df = pd.read_csv(path)
+        # CAS LOCAL
+        local_path = Path(__file__).resolve().parents[2] / "Data" / "features_clients.csv"
+        if local_path.exists():
+            df = pd.read_csv(local_path)
+
+        else:
+            # CAS HF
+            path = hf_hub_download(
+                repo_id="PCelia/credit-scoring-model",
+                filename="features_clients.csv",
+                token=os.environ.get("HF_TOKEN")
+            )
+            df = pd.read_csv(path)
 
     row = df[df["SK_ID_CURR"] == sk_id_curr]
     if row.empty:
