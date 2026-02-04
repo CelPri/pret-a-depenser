@@ -3,16 +3,26 @@ from pathlib import Path
 import os
 from huggingface_hub import hf_hub_download
 
+import os
+from huggingface_hub import hf_hub_download
+import joblib
+
+# On récupère le token que tu vas créer dans les réglages du Space
+token = os.environ.get("HF_TOKEN")
+
 def load_model():
-    # --- STRATÉGIE 1 : Hugging Face Space ---
-    # On essaie de télécharger le modèle depuis ton dépôt de modèles HF
     try:
-        # Remplace bien 'PCelia/Pret-a-depenser' par le nom exact de ton REPO MODELE
-        model_path = hf_hub_download(repo_id="PCelia/Pret-a-depenser", filename="model.joblib")
-        print(f"Modèle chargé depuis HF Hub: {model_path}")
+        # On pointe vers le bon dépôt de modèle (pas le space)
+        model_path = hf_hub_download(
+            repo_id="PCelia/credit-scoring-model", 
+            filename="model.joblib",
+            token=token
+        )
+        print("Modèle chargé avec succès depuis le Hub !")
         return joblib.load(model_path)
     except Exception as e:
-        print(f"Échec chargement HF Hub (normal si local): {e}")
+        print(f"Échec HF Hub: {e}")
+   
 
     # --- STRATÉGIE 2 : MLflow (Local uniquement) ---
     # Si on est chez toi, on utilise MLflow
