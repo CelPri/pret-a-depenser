@@ -13,15 +13,19 @@ class ClientID(BaseModel):
 
 
 def get_features_by_id(sk_id_curr: int) -> pd.DataFrame:
-    path = hf_hub_download(
-        repo_id="PCelia/credit-scoring-model",
-        filename="features_clients.csv",
-        token=os.environ.get("HF_TOKEN")
-    )
+    # CAS TEST / LOCAL : features injectées par le test
+    if hasattr(app.state, "features") and app.state.features is not None:
+        df = app.state.features
+    else:
+        # CAS PROD HF
+        path = hf_hub_download(
+            repo_id="PCelia/credit-scoring-model",
+            filename="features_clients.csv",
+            token=os.environ.get("HF_TOKEN")
+        )
+        df = pd.read_csv(path)
 
-    df = pd.read_csv(path)
     row = df[df["SK_ID_CURR"] == sk_id_curr]
-
     if row.empty:
         raise KeyError("Client not found")
 
