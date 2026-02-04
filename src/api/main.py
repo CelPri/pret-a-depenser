@@ -35,7 +35,8 @@ def get_features_by_id(sk_id_curr: int) -> pd.DataFrame:
         else:
             # CAS HF
             path = hf_hub_download(
-                repo_id="PCelia/credit-scoring-model",
+                repo_id="PCelia/Pret-a-depenser"
+,
                 filename="features_clients.csv",
                 token=os.environ.get("HF_TOKEN")
             )
