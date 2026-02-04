@@ -7,17 +7,24 @@ import os
 from huggingface_hub import hf_hub_download
 from src.model.model import load_model
 
+from fastapi.responses import RedirectResponse
+
+
+
 
 class ClientID(BaseModel):
     sk_id_curr: int
 
 
+from pathlib import Path
+
 def get_features_by_id(sk_id_curr: int) -> pd.DataFrame:
-    # CAS TEST / LOCAL : features injectées par le test
-    if hasattr(app.state, "features") and app.state.features is not None:
-        df = app.state.features
+    # CAS LOCAL : CSV présent dans le projet
+    local_path = Path(__file__).resolve().parents[2] / "Data" / "features_clients.csv"
+    if local_path.exists():
+        df = pd.read_csv(local_path)
     else:
-        # CAS PROD HF
+        # CAS HF : téléchargement depuis le Hub
         path = hf_hub_download(
             repo_id="PCelia/credit-scoring-model",
             filename="features_clients.csv",
@@ -32,6 +39,7 @@ def get_features_by_id(sk_id_curr: int) -> pd.DataFrame:
     return row.drop(columns=["SK_ID_CURR"])
 
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.model = load_model()
@@ -40,6 +48,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+@app.get("/")
+def root():
+    return RedirectResponse(url="/docs")
 
 @app.post("/predict_by_id")
 def predict_by_id(payload: ClientID):
