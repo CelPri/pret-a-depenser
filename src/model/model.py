@@ -7,12 +7,12 @@ import os
 from huggingface_hub import hf_hub_download
 import joblib
 
-# On récupère le token que tu vas créer dans les réglages du Space
+# On récupère le token hf
 token = os.environ.get("HF_TOKEN")
 
 def load_model():
     try:
-        # On pointe vers le bon dépôt de modèle (pas le space)
+        # On pointe vers le bon dépôt de modèle 
         model_path = hf_hub_download(
             repo_id="PCelia/credit-scoring-model", 
             filename="model.joblib",
@@ -24,8 +24,7 @@ def load_model():
         print(f"Échec HF Hub: {e}")
    
 
-    # --- STRATÉGIE 2 : MLflow (Local uniquement) ---
-    # Si on est chez toi, on utilise MLflow
+    # Local
     try:
         import mlflow.sklearn
         # On définit le chemin de ta DB mlflow relative à ce fichier

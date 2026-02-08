@@ -7,3 +7,4 @@ mlflow
 pytest
 httpx
 huggingface-hub
+streamlit
