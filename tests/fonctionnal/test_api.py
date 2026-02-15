@@ -6,13 +6,13 @@ from contextlib import asynccontextmanager
 from src.api.main import app
 
 
-# ---- Neutralise le lifespan ----
+# Neutralise le lifespan 
 @asynccontextmanager
 async def empty_lifespan(app):
     yield
 
 app.router.lifespan_context = empty_lifespan
-# --------------------------------
+
 
 
 class DummyModel:
@@ -23,10 +23,7 @@ class DummyModel:
 def get_client():
     app.state.model = DummyModel()
     app.state.features = pd.DataFrame({
-        "SK_ID_CURR": [100002],
-        "feature_1": [0.5],
-        "feature_2": [1.2],
-    })
+        "SK_ID_CURR": [100002],})
     return TestClient(app)
 
 

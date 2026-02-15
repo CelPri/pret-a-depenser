@@ -3,7 +3,7 @@ import numpy as np
 
 
 def dummy_preprocess(df: pd.DataFrame):
-    # remplace par ta vraie fonction si elle existe
+   
     return df.fillna(0)
 
 

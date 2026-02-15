@@ -2,7 +2,6 @@ import pytest
 
 
 def validate_input(age: int, income: float):
-    # remplace par ta vraie fonction si elle existe
     if age < 0:
         raise ValueError("Age must be positive")
     if income <= 0:
