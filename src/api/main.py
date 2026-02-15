@@ -107,7 +107,10 @@ def predict_by_id(payload: ClientID):
         f"total={total_time:.3f}s"
     )
 
-    inputs_dict = X.to_dict(orient="records")[0]
+    if not X.empty:
+        inputs_dict = X.to_dict(orient="records")[0]
+    else:
+        inputs_dict = {}
 
     log_entry = {
         "timestamp": datetime.utcnow().isoformat(),
