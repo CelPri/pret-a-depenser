@@ -6,4 +6,6 @@ __pycache__/
 model.joblib
 projet8
 app
-export_model.py
+expo
+debug_model.py
+api_logs.jsonl

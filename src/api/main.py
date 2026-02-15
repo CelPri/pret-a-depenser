@@ -98,6 +98,8 @@ def predict_by_id(payload: ClientID):
         f"infer={infer_time:.3f}s | "
         f"total={total_time:.3f}s"
     )
+    inputs_dict = X.to_dict(orient="records")[0]
+
     log_entry = {
     "timestamp": datetime.utcnow().isoformat(),
     "endpoint": "/predict_by_id",
@@ -105,9 +107,12 @@ def predict_by_id(payload: ClientID):
     "score": score,
     "features_time": features_time,
     "inference_time": infer_time,
-    "total_time": total_time
+    "total_time": total_time,
+    "inputs": inputs_dict
     }
 
+    import os
+    print("LOG PATH:", os.path.abspath("api_logs.jsonl"))
     with open("api_logs.jsonl", "a") as f:
         f.write(json.dumps(log_entry) + "\n") 
     
