@@ -60,12 +60,20 @@ def load_features() -> pd.DataFrame:
     )
     return pd.read_csv(path)
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.model = load_model()
-    app.state.features = load_features()
+
+    # En test (pytest), on ne charge pas les features ici
+    if os.environ.get("PYTEST_CURRENT_TEST") is None:
+        app.state.features = load_features()
+
     yield
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     app.state.model = load_model()
+#     app.state.features = load_features()
+#     yield
 
 
 app = FastAPI(lifespan=lifespan)
